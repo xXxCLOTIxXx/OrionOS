@@ -1,20 +1,19 @@
 bits 32
 section .text
-    ; Multiboot specification header
     align 4
-    dd 0x1BADB002             ; magic
-    dd 0x00                   ; flags
-    dd - (0x1BADB002 + 0x00)  ; checksum, m + f + c should be zero
+    dd 0x1BADB002
+    dd 0x00
+    dd - (0x1BADB002 + 0x00)
 
     global start
-    extern kernel_main  ; это определено в вашем ядре на C++
+    extern kernel_main
 
 start:
-    cli                 ; блокировка прерываний
-    mov esp, stack_space ; установка указателя стека
-    call kernel_main     ; вызов функции kernel_main из вашего ядра
-    hlt                 ; остановить процессор
+    cli
+    mov esp, stack_space
+    call kernel_main     ; вызов kernel_main из ядра
+    hlt               
 
 section .bss
-    resb 8192           ; 8 КБ для стека
+    resb 8192
 stack_space:

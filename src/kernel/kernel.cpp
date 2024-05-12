@@ -1,4 +1,3 @@
-// kernel.cpp
 extern "C" void kernel_main() {
     const char* hello = "VirtOS Alpha | Hello world from VirtOS!";
     volatile unsigned char* video_memory = (volatile unsigned char*) 0xb8000;
