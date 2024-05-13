@@ -11,8 +11,8 @@ section .text
 start:
     cli
     mov esp, stack_space
-    call kernel_main     ; вызов kernel_main из ядра
-    hlt               
+    call kernel_main
+    hlt
 
 section .bss
     resb 8192
