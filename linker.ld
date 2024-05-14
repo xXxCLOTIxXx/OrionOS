@@ -1,7 +1,7 @@
-ENTRY(kernel_main)
+ENTRY(start)
 
 SECTIONS {
-    . = 0x100000; /* Указываем GRUB'у, где загружать ядро в память */
+    . = 0x100000;
     .text : { *(.text) }
     .data : { *(.data) }
     .bss : { *(.bss) }
