@@ -12,7 +12,6 @@ size_t current_loc = 0;
 
 
 void size_t_to_char(size_t num, char* result) {
-    // Преобразование числа в строку
     size_t temp = num;
     int digit_count = 0;
     do {
@@ -25,12 +24,14 @@ void size_t_to_char(size_t num, char* result) {
         result[i] = '0' + temp % 10;
         temp /= 10;
     }
-    result[digit_count] = '\0'; // Завершающий символ строки
+    result[digit_count] = '\0';
 }
 
 
-void print(const char* message, uint8_t color = Color::White) {
-    for (int i = 0; message[i] != '\0'; ++i) {
+template<typename T>
+void print(const T& data, uint8_t color = Color::White) {
+    const char* message = reinterpret_cast<const char*>(&data); 
+    for (size_t i = 0; i < sizeof(T); ++i) {
         video_memory[current_loc] = message[i];
         video_memory[current_loc + 1] = color;
         current_loc += BYTES_FOR_EACH_ELEMENT;
@@ -56,13 +57,14 @@ void clear() {
     current_loc = 0;
 }
 
-void println(const char* message, uint8_t color = Color::White){
+template<typename T>
+void println(const T& message, uint8_t color = Color::White){
     print(message, color);
     endl();
 }
 
 void print_size_t(size_t num, uint8_t color = Color::White) {
-    char buffer[20]; // Размер буфера зависит от максимального числа символов в представлении size_t
-    size_t_to_char(num, buffer); // Предполагается, что у вас есть функция size_t_to_char, как в предыдущем примере
+    char buffer[20]; 
+    size_t_to_char(num, buffer); 
     println(buffer, color);
 }

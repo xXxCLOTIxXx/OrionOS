@@ -1,23 +1,34 @@
-//#include "kernel_io/stdio.cpp"
-#include "kernel_io/stdtimers.cpp"
+#include "base_io/stdio.cpp"
+#include "base_io/stdtimers.cpp"
+#include "utils/multiboot.h"
+
 #include "utils/memory/memory_management.cpp"
 
+void loop() {
+    while (true) {}
+}
 
-extern "C" void kernel_main() {
-    println("Starting kernel...");
-    initialize_memory();
-    sleep(20);
-    clear();
-    println("VirtOs | alpha", Color::DarkCyan);
-
-    void* ptr = _kmalloc(100, 0);
-    if (ptr == nullptr) {
-        println("Failed to allocate memory!");
-    } else{
-        println("allocated memory: ");
-        print_size_t((size_t)ptr);
+extern "C" void kernel_main(multiboot_info_t *multiboot) {
+    println("Starting the system...");
+    if (multiboot == nullptr) {
+        println("memory info is empty! FATAL ERROR", Color::LightRed);
+        loop();
     }
-    //delete[] ptr;
+    init_system_memory(multiboot->mmap_length, (void*)multiboot->mmap_addr, multiboot->mmap_length);
+    print("Successful memory initialization: ", Color::DarkGreen);
+    print_size_t(multiboot->mmap_length);
+    endl();
 
-    while (1) {}
+    sleep(55);
+    clear();
+    println("Welcome to OrionOS.", Color::LightCyan);
+    void* mem = _kmalloc(100, 0);
+    if (mem != nullptr) {
+        print("Memory allocated successfully: ", Color::DarkGreen);
+        print_size_t(reinterpret_cast<size_t>(mem));
+    } else {
+        println("Memory allocation test failed.", Color::DarkRed);
+    }
+
+    loop();
 }

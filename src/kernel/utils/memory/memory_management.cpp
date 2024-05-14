@@ -1,18 +1,19 @@
 #include "memory_structures.h"
 #include <cstdint>
-#include "../../kernel_io/stdio.cpp"
 
+_mem_block_t* kMemStart_mem_block = nullptr;
 
-
-void initialize_memory() {
+void init_system_memory(size_t initial_free, void* initial_addr, size_t initial_length) {
     system_memory.used = 0;
-    system_memory.constfree = 1024;
-    system_memory.free_mem.addr = (void*)0x1000;
-    system_memory.free_mem.length = 1024;
+    system_memory.free = initial_free;
+    system_memory.free_mem.addr = initial_addr;
+    system_memory.free_mem.length = initial_length;
 }
 
 
-_mem_block_t* kMemStart_mem_block = nullptr;
+
+
+
 
 void* _kmalloc(size_t size, uint32_t aligned) {
     if (size == 0) {
@@ -21,10 +22,11 @@ void* _kmalloc(size_t size, uint32_t aligned) {
 
     size_t total_size = size + sizeof(_mem_block_t);
 
-    if(system_memory.constfree - system_memory.used <= size || system_memory.constfree - system_memory.used <= total_size) {
-        //println("Not enough memory");
-        return nullptr; // Not enough memory
+    if(system_memory.free - system_memory.used <= size || system_memory.free - system_memory.used <= total_size) {
+        // Обработка ситуации, когда памяти недостаточно
+        return nullptr;
     } else if(kMemStart_mem_block == nullptr) {
+        // Инициализация блока памяти, если он еще не был инициализирован
         kMemStart_mem_block = (_mem_block_t*)((uint32_t)system_memory.free_mem.addr);
         system_memory.used = 0;
         kMemStart_mem_block->size = system_memory.free_mem.length - sizeof(_mem_block_t);
@@ -53,6 +55,8 @@ void* _kmalloc(size_t size, uint32_t aligned) {
         } 
         prev_mem_block = current_mem_block;
         current_mem_block = current_mem_block->next;
+
+        // нужно тестировать короче... ыы
     }
     return nullptr;
 }
