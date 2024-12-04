@@ -1,13 +1,9 @@
 <div align="center">
-
-# OrionOS
-
-**Warning:** This operating system is provided as an example. Do not install it on your physical device; use it only on a virtual machine.
-
-
-### build os:
+<h1>TectonicOS</h1>
+  
+Launching in QEMU
 </div>
 
 ```shell
-sh build.sh
+qemu-system-i386 -cdrom TOS.iso
 ```
