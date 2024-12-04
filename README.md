@@ -1,9 +1,5 @@
 <div align="center">
 <h1>TectonicOS</h1>
   
-Launching in QEMU
+Libs for kernel
 </div>
-
-```shell
-qemu-system-i386 -cdrom TOS.iso
-```
